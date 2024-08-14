@@ -1,8 +1,8 @@
-# SuperDiff: Diffusion Models for Conditional Generation of Hypothetical New Families of Superconductors
+# Diffusion Models for Conditional Generation of Hypothetical New Families of Superconductors
 
 ## Authors: Samuel Yuan and S.V. Dordevic
 
-## [Paper on arXiv](https://arxiv.org/abs/2402.00198)
+## [arXiv](https://arxiv.org/abs/2402.00198), [Website](https://www.nature.com/articles/s41598-024-61040-3)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10699906.svg)](https://doi.org/10.5281/zenodo.10699906)
 
@@ -23,12 +23,37 @@ The folder `SuperDiff` contains notebooks for some of the experiments we conduct
 If you find this work useful, please cite it as
 
 ```
-@misc{yuan2024superdiff,
-      title={SuperDiff: Diffusion Models for Conditional Generation of Hypothetical New Families of Superconductors}, 
-      author={Samuel Yuan and S. V. Dordevic},
-      year={2024},
-      eprint={2402.00198},
-      archivePrefix={arXiv},
-      primaryClass={cond-mat.supr-con}
+@ARTICLE{yuan2024superdiff,
+  title    = "Diffusion models for conditional generation of hypothetical new
+              families of superconductors",
+  author   = "Yuan, Samuel and Dordevic, S V",
+  abstract = "Effective computational search holds great potential for aiding
+              the discovery of high-temperature superconductors (HTSs),
+              especially given the lack of systematic methods for their
+              discovery. Recent progress has been made in this area with
+              machine learning, especially with deep generative models, which
+              have been able to outperform traditional manual searches at
+              predicting new superconductors within existing superconductor
+              families but have yet to be able to generate completely new
+              families of superconductors. We address this limitation by
+              implementing conditioning---a method to control the generation
+              process---for our generative model and develop SuperDiff, a
+              denoising diffusion probabilistic model with iterative latent
+              variable refinement conditioning for HTS discovery---the first
+              deep generative model for superconductor discovery with
+              conditioning on reference compounds. With SuperDiff, by being
+              able to control the generation process, we were able to
+              computationally generate completely new families of hypothetical
+              superconductors for the very first time. Given that SuperDiff
+              also has relatively fast training and inference times, it has the
+              potential to be a very powerful tool for accelerating the
+              discovery of new superconductors and enhancing our understanding
+              of them.",
+  journal  = "Scientific Reports",
+  volume   =  14,
+  number   =  1,
+  pages    = "10275",
+  month    =  may,
+  year     =  2024
 }
 ```
