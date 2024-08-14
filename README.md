@@ -2,7 +2,7 @@
 
 ## Authors: Samuel Yuan and S.V. Dordevic
 
-## [arXiv](https://arxiv.org/abs/2402.00198), [Website](https://www.nature.com/articles/s41598-024-61040-3)
+## [[arXiv]](https://arxiv.org/abs/2402.00198) [[Website]](https://www.nature.com/articles/s41598-024-61040-3)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10699906.svg)](https://doi.org/10.5281/zenodo.10699906)
 
