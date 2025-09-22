@@ -88,6 +88,10 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
         count_list.append(int(i*lcm))
 
       count = tuple(count_list)
+      if comp is None or len(comp) == 0:
+        print(f"⚠️ Skipping invalid comp: {i}")
+        vals2.append(False)
+        continue
 
       #vals2 is a list of Boolean corresponding to each formula's validity
       vals2.append(smact_validity(comp, count))
@@ -110,4 +114,5 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     print(valid_generated_compounds_size) 
 
     return valid_generated_compounds, valid_generated_compounds_size
+
 
