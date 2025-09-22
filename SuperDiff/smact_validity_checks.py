@@ -76,29 +76,22 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     generated_supercon_raw_df.rename(columns={0: 'formula'}, inplace=True)
     
     vals2 = []
-    for i in generated_supercon_raw_df['formula']:
-      try:
-          form_dict = Composition(i).to_reduced_dict()
-          if not form_dict:  # empty dict or None
-              print(f"⚠️ Skipping unparsable formula: {i}")
-              vals2.append(False)
-              continue
+   for i in generated_supercon_raw_df['formula']:
+    # get the reduced dictionary properly
+    form_dict = Composition(i).as_reduced_dict()
 
-          comp = tuple(form_dict.keys())
-          count = list(form_dict.values())
+    comp = tuple(form_dict.keys())
+    count = list(form_dict.values())
 
-          denom_list = [(Fraction(x).limit_denominator()).denominator for x in count]
-          lcm = functools.reduce(lambda a, b: a*b//math.gcd(a, b), denom_list)
 
-          count_list = [int(x * lcm) for x in count]
-          count = tuple(count_list)
+    denom_list = [(Fraction(x).limit_denominator()).denominator for x in count]
+    lcm = functools.reduce(lambda a, b: a*b//math.gcd(a, b), denom_list)
 
-          print("Parsed:", i, "->", comp, count)  # debug
-          vals2.append(smact_validity(comp, count))
+    count_list = [int(x * lcm) for x in count]
+    count = tuple(count_list)
 
-      except Exception as e:
-          print(f"❌ Error parsing {i}: {e}")
-          vals2.append(False)
+    print("Parsed:", i, "->", comp, count)  # debug
+    vals2.append(smact_validity(comp, count))
 
     
     ### 6730/12415 formulas are valid (54%) - from https://github.com/cseeg/DiSCoVeR-SuperCon-NOMAD-SMACT/blob/main/main.ipynb on SuperCon
@@ -119,3 +112,4 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     print(valid_generated_compounds_size) 
 
     return valid_generated_compounds, valid_generated_compounds_size
+
