@@ -4,7 +4,6 @@ import csv
 import math
 import smact
 from smact.screening import pauling_test
-from smact.data import metals as smact_metals
 import itertools
 from fractions import Fraction
 import functools
@@ -25,15 +24,10 @@ def smact_validity(comp, count,
     ox_combos = [e.oxidation_states for e in smact_elems]
     if len(set(comp)) == 1:
         return True
-      
     if include_alloys:
-      try:
-          from smact.data import metals as smact_metals
-      except ImportError:
-          smact_metals = set()  # fallback, no metals
-      is_metal_list = [elem_s in smact_metals for elem_s in comp]
-      if all(is_metal_list):
-          return True
+        is_metal_list = [elem_s in smact.metals for elem_s in comp]
+        if all(is_metal_list):
+            return True
 
     threshold = np.max(count)
     compositions = []
@@ -73,7 +67,7 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     
     vals2 = []
     for i in generated_supercon_raw_df['formula']:
-      form_dict = Composition(i).as_reduced_dict()
+      form_dict = Composition(i).to_reduced_dict
 
       comp = tuple(form_dict.keys())
 
@@ -88,10 +82,6 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
         count_list.append(int(i*lcm))
 
       count = tuple(count_list)
-      if comp is None or len(comp) == 0:
-        print(f"⚠️ Skipping invalid comp: {i}")
-        vals2.append(False)
-        continue
 
       #vals2 is a list of Boolean corresponding to each formula's validity
       vals2.append(smact_validity(comp, count))
@@ -114,5 +104,3 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     print(valid_generated_compounds_size) 
 
     return valid_generated_compounds, valid_generated_compounds_size
-
-
