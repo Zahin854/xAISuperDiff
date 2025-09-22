@@ -4,6 +4,7 @@ import csv
 import math
 import smact
 from smact.screening import pauling_test
+from smact.data import metals as smact_metals
 import itertools
 from fractions import Fraction
 import functools
@@ -24,10 +25,15 @@ def smact_validity(comp, count,
     ox_combos = [e.oxidation_states for e in smact_elems]
     if len(set(comp)) == 1:
         return True
+      
     if include_alloys:
-        is_metal_list = [elem_s in smact.metals for elem_s in comp]
-        if all(is_metal_list):
-            return True
+      try:
+          from smact.data import metals as smact_metals
+      except ImportError:
+          smact_metals = set()  # fallback, no metals
+      is_metal_list = [elem_s in smact_metals for elem_s in comp]
+      if all(is_metal_list):
+          return True
 
     threshold = np.max(count)
     compositions = []
@@ -104,3 +110,4 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     print(valid_generated_compounds_size) 
 
     return valid_generated_compounds, valid_generated_compounds_size
+
