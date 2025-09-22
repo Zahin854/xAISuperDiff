@@ -19,9 +19,17 @@ def smact_validity(comp, count,
     """
     global compositions
     space = smact.element_dictionary(comp)
+    print(space)
     smact_elems = [e[1] for e in space.items()]
+    
     electronegs = [e.pauling_eneg for e in smact_elems]
     ox_combos = [e.oxidation_states for e in smact_elems]
+    if any(oc is None for oc in ox_combos):
+      return False
+    print("comp:", comp)
+    print("ox_combos:", ox_combos)
+    print("electronegs",electronegs)
+    
     if len(set(comp)) == 1:
         return True
     if include_alloys:
@@ -31,6 +39,8 @@ def smact_validity(comp, count,
 
     threshold = np.max(count)
     compositions = []
+    
+
     for ox_states in itertools.product(*ox_combos):
         stoichs = [(c,) for c in count]
         # Test for charge balance
@@ -67,24 +77,29 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     
     vals2 = []
     for i in generated_supercon_raw_df['formula']:
-      form_dict = Composition(i).to_reduced_dict
+      try:
+          form_dict = Composition(i).to_reduced_dict()
+          if not form_dict:  # empty dict or None
+              print(f"⚠️ Skipping unparsable formula: {i}")
+              vals2.append(False)
+              continue
 
-      comp = tuple(form_dict.keys())
+          comp = tuple(form_dict.keys())
+          count = list(form_dict.values())
 
-      count = list(form_dict.values())
+          denom_list = [(Fraction(x).limit_denominator()).denominator for x in count]
+          lcm = functools.reduce(lambda a, b: a*b//math.gcd(a, b), denom_list)
 
-      #find least common multiple to get count as a tuple of ints
-      denom_list = [(Fraction(x).limit_denominator()).denominator for x in count]
-      lcm = functools.reduce(lambda a,b: a*b//math.gcd(a,b), denom_list)
+          count_list = [int(x * lcm) for x in count]
+          count = tuple(count_list)
 
-      count_list = []
-      for i in count:
-        count_list.append(int(i*lcm))
+          print("Parsed:", i, "->", comp, count)  # debug
+          vals2.append(smact_validity(comp, count))
 
-      count = tuple(count_list)
+      except Exception as e:
+          print(f"❌ Error parsing {i}: {e}")
+          vals2.append(False)
 
-      #vals2 is a list of Boolean corresponding to each formula's validity
-      vals2.append(smact_validity(comp, count))
     
     ### 6730/12415 formulas are valid (54%) - from https://github.com/cseeg/DiSCoVeR-SuperCon-NOMAD-SMACT/blob/main/main.ipynb on SuperCon
     ### append Boolean vals to train_df
