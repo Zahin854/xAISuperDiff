@@ -19,9 +19,16 @@ def smact_validity(comp, count,
     """
     global compositions
     space = smact.element_dictionary(comp)
+    print(space)
     smact_elems = [e[1] for e in space.items()]
+    for elem in smact_elems:
+      if elem.oxidation_states is None:
+          print("⚠️ No ox states for:", elem.symbol)
+
     electronegs = [e.pauling_eneg for e in smact_elems]
-    ox_combos = [e.oxidation_states for e in smact_elems]
+    ox_combos = [e.oxidation_states if e.oxidation_states is not None else [] for e in smact_elems]
+    if any(len(ox) == 0 for ox in ox_combos):  
+        return False
     if len(set(comp)) == 1:
         return True
     if include_alloys:
@@ -104,3 +111,4 @@ def filter_for_valid_generated_compounds(generated_superconductors_raw):
     print(valid_generated_compounds_size) 
 
     return valid_generated_compounds, valid_generated_compounds_size
+
